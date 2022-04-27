@@ -22,7 +22,7 @@ const runMain = async () => {
         process.exit(0); // exit Node process without error
     } catch (error) {
         console.log(error);
-        process.exit(1); // exit Node process while indicating 'Uncaught Fatal Exception"
+        process.exit(2); // exit Node process while indicating 'Uncaught Fatal Exception"
     }
 };
 
