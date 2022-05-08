@@ -4,7 +4,7 @@
 
 const main = async () => {
 
-    const [owner, randomPerson] = await hre.ethers.getSigners();
+    const [_, randomPerson] = await hre.ethers.getSigners();
 
     // Compile 
     const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
@@ -15,20 +15,23 @@ const main = async () => {
 
     // Execute
     console.log("Contract deployed to:", waveContract.address);
-    console.log("Contract deployed by:", owner.address);
+    
 
     let waveCount;
     waveCount = await waveContract.getTotalWaves();
+    console.log(waveCount.toNumber());
+  
 
-    let waveTxn = await waveContract.wave();
+    let waveTxn = await waveContract.wave("A message");
     await waveTxn.wait();
     
-    waveCount = await waveContract.getTotalWaves();
+    // waveCount = await waveContract.getTotalWaves();
 
-    waveTxn = await waveContract.connect(randomPerson).wave();
+    waveTxn = await waveContract.connect(randomPerson).wave("Make this world a better place!!");
     await waveTxn.wait()
 
-    waveCount = await waveContract.getTotalWaves();
+    let allWaves = await waveContract.getAllWaves();
+    console.log(allWaves);
 
 
     let songNumber;
