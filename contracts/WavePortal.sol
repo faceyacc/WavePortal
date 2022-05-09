@@ -7,11 +7,15 @@ import "hardhat/console.sol";
 contract WavePortal {
 
     uint256 totalWaves;
+    uint256 private seed;
     uint256 playlistNumber;
     Wave[] waves;
 
     constructor() payable {
         console.log("I am a contract and I am smart!");
+
+        // Set the inital seed
+        seed = (block.timestamp + block.difficulty) % 100;
     }
 
     event NewWave(address indexed from, uint256 timestamp, string message);
@@ -33,16 +37,25 @@ contract WavePortal {
 
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
-        // Emit logs on sender
+
+        // Generate a new seed for the next user that send a wave
+        seed = (block.difficulty + block.timestamp) % 100;
+
+        console.log("Random # generate: %d", seed);
+
+        // Give a 50% chance that the user winds the price
+        if(seed <= 50) {
+            console.log("%s won!", msg.sender);
+
+            require(
+                prizeAmount <= address(this).balance,
+                "Trying to withdraw more money than the contract has."
+            );
+            
+            (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+            require(success, "Failed to withdraw money from contract");            
+        }
         emit NewWave(msg.sender, block.timestamp, _message);
-
-        require(
-            prizeAmount <= address(this).balance,
-            "Trying to withdraw more money than the contract has."
-        );
-
-        (bool success, ) = (msg.sender).call{value: prizeAmount}("");
-        require(success, "Failed to withdraw money from contract");
     }
 
     // Returns struct array of wave 
