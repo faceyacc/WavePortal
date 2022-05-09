@@ -10,7 +10,7 @@ contract WavePortal {
     uint256 playlistNumber;
     Wave[] waves;
 
-    constructor() {
+    constructor() payable {
         console.log("I am a contract and I am smart!");
     }
 
@@ -25,6 +25,8 @@ contract WavePortal {
 
 
     function wave(string memory _message) public {
+        uint256 prizeAmount = 0.0001 ether;
+
         totalWaves += 1;
 
         console.log("%s waved w/ message %s", msg.sender, _message);
@@ -34,6 +36,13 @@ contract WavePortal {
         // Emit logs on sender
         emit NewWave(msg.sender, block.timestamp, _message);
 
+        require(
+            prizeAmount <= address(this).balance,
+            "Trying to withdraw more money than the contract has."
+        );
+
+        (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+        require(success, "Failed to withdraw money from contract");
     }
 
     // Returns struct array of wave 
