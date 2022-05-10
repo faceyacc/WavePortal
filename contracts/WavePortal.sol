@@ -42,7 +42,7 @@ contract WavePortal {
 
         totalWaves += 1;
 
-        // console.log("%s waved w/ message %s", msg.sender, _message);
+        console.log("%s waved w/ message %s", msg.sender, _message);
 
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
