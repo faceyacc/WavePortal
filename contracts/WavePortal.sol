@@ -11,15 +11,9 @@ contract WavePortal {
     uint256 playlistNumber;
     Wave[] waves;
 
-    constructor() payable {
-        console.log("I am a contract and I am smart!");
-
-        // Set the inital seed
-        seed = (block.timestamp + block.difficulty) % 100;
-    }
+    mapping(address => uint256) public lastWavedAt;
 
     event NewWave(address indexed from, uint256 timestamp, string message);
-
 
     struct Wave {
         address waver; // The address of the user who waved
@@ -28,8 +22,23 @@ contract WavePortal {
     }
 
 
+    constructor() payable {
+        console.log("I am a contract and I am smart!");
+
+        // Set the inital seed
+        seed = (block.timestamp + block.difficulty) % 100;
+    }
+
     function wave(string memory _message) public {
-        uint256 prizeAmount = 0.0001 ether;
+
+
+        require(
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            "Wait 15m"
+        );
+
+        lastWavedAt[msg.sender] = block.timestamp;
+
 
         totalWaves += 1;
 
@@ -39,19 +48,20 @@ contract WavePortal {
 
 
         // Generate a new seed for the next user that send a wave
-        seed = (block.difficulty + block.timestamp) % 100;
+        seed = (block.difficulty + block.timestamp + seed) % 100;
 
         console.log("Random # generate: %d", seed);
 
         // Give a 50% chance that the user winds the price
         if(seed <= 50) {
             console.log("%s won!", msg.sender);
-
+            
+            uint256 prizeAmount = 0.0001 ether;
             require(
                 prizeAmount <= address(this).balance,
                 "Trying to withdraw more money than the contract has."
             );
-            
+
             (bool success, ) = (msg.sender).call{value: prizeAmount}("");
             require(success, "Failed to withdraw money from contract");            
         }
