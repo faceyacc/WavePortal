@@ -1,10 +1,11 @@
 const main = async () => {
     // gets var to eth account
-    const [deployer] = await hre.ethers.getSigners();
-    const accountBalance = await deployer.getBalance();
+    // const [deployer] = await hre.ethers.getSigners();
+    // const accountBalance = await deployer.getBalance();
 
-    console.log("Deploying contract with account: ", deployer.address);
-    console.log("Account balance: ", accountBalance.toString());
+    // console.log("Deploying contract with account: ", deployer.address);
+    // console.log("Account balance: ", accountBalance.toString());
+
 
      const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
 
@@ -13,7 +14,8 @@ const main = async () => {
      });
      await waveContract.deployed();
 
-     console.log("Wave portal address: ", waveContract.address);
+     console.log("WavePortal address: ", waveContract.address);
+
 };
 
 
