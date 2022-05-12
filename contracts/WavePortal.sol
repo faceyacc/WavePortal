@@ -10,9 +10,7 @@ contract WavePortal {
     uint256 private seed;
     uint256 playlistNumber;
     Wave[] waves;
-
-    mapping(address => uint256) public lastWavedAt;
-
+    
     event NewWave(address indexed from, uint256 timestamp, string message);
 
     struct Wave {
@@ -20,6 +18,9 @@ contract WavePortal {
         string message; // The message the user sent
         uint256 timestamp; // The timestamp when the user waved
     }
+
+    mapping(address => uint256) public lastWavedAt;
+
 
 
     constructor() payable {
@@ -30,14 +31,13 @@ contract WavePortal {
     }
 
     function wave(string memory _message) public {
-        
-        totalWaves += 1;
 
         // Create cool-down mechanism
         require(lastWavedAt[msg.sender] + 30 seconds < block.timestamp, "Must wait 30 seconds before waving again.");
 
         lastWavedAt[msg.sender] = block.timestamp;
-
+        
+        totalWaves += 1;
 
 
         console.log("%s waved w/ message %s", msg.sender, _message);
@@ -48,7 +48,6 @@ contract WavePortal {
         // Generate a new seed for the next user that send a wave
         seed = (block.difficulty + block.timestamp + seed) % 100;
 
-        console.log("Random # generate: %d", seed);
 
         // Give a 50% chance that the user winds the price
         if(seed <= 50) {
@@ -76,7 +75,6 @@ contract WavePortal {
         console.log("We have %d total waves", totalWaves);
         return totalWaves;
     }
-    
 
     // Gets the current song number
     function getPlaylistNumber() public view returns (uint256) {
