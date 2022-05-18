@@ -1,6 +1,8 @@
 kind: pipeline
 type: docker
 name: default
+when:
+  event: [pull_request]
 steps:
   - name: Semgrep Agent
     image: returntocorp/semgrep
@@ -9,12 +11,12 @@ steps:
       SEMGREP_APP_TOKEN:
         from_secret: SEMGREP_APP_TOKEN
       SEMGREP_REPO_URL: ${DRONE_REPO_LINK}
-      SEMGREP_BRANCH: ${DRONE_SOURCE_BRANCH}
+      SEMGREP_BRANCH: ${DRONE_COMMIT_BRANCH}
       SEMGREP_JOB_URL: ${DRONE_BUILD_LINK}
       SEMGREP_REPO_NAME: ${DRONE_REPO}
       SEMGREP_COMMIT: ${DRONE_COMMIT}
       SEMGREP_PR_ID: ${DRONE_PULL_REQUEST}
-      SEMGREP_BASELINE_REF: ${DRONE_COMMIT_BRANCH}
+      SEMGREP_BASELINE_REF: $(git merge-base main HEAD)
 
     commands:
       - semgrep login; semgrep ci
