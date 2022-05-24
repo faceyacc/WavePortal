@@ -2,7 +2,7 @@ kind: pipeline
 type: docker
 name: default
 steps:
-  - name: Semgrep Scan
+  - name: Semgrep Scan Test
     image: returntocorp/semgrep
     pull: always
     environment:
