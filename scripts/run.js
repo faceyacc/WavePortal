@@ -11,7 +11,6 @@ const main = async () => {
     
 
     // Deploy
-
     // creates local Ethereum network and funds it 
     const waveContract = await waveContractFactory.deploy({ 
       value: hre.ethers.utils.parseEther("0.1"),
@@ -21,44 +20,28 @@ const main = async () => {
     // Execute
     console.log("Contract deployed to:", waveContract.address);
 
-    contractBalance = await hre.ethers.provider.getBalance(
-      waveContract.address
-    );
+    // contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    // console.log(
+    //   "Contract balance:", 
+    //   hre.ethers.utils.formatEther(contractBalance)
+    // );
 
-    console.log(
-      "Contract balance:",
-      hre.ethers.utils.formatEther(contractBalance)
-    );
+    const donateTxn = await waveContract.donate(hre.ethers.utils.parseEther("0.34"));
+    await donateTxn.wait();
 
-    const waveTxn = await waveContract.wave("This is wave #1");
-    await waveTxn.wait();
+    const balance = await waveContract.getBalance();
 
-    const waveTxn2 = await waveContract.wave("This is wave #2");
-    await waveTxn2.wait();
+    console.log(balance);
 
-    contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+
+    
     console.log(
       "Contract balance:", 
-      hre.ethers.utils.formatEther(contractBalance)
+      hre.ethers.utils.formatEther(balance)
     );
 
-    let allWaves = await waveContract.getAllWaves();
-    console.log(allWaves);
 
-
-
-
-    let songNumber;
-    songNumber = await waveContract.getPlaylistNumber();
-
-
-    let songTxn = await waveContract.playSong(3);
-    await songTxn.wait();
-
-    songNumber = await waveContract.getPlaylistNumber();
 };
-
-
 
 const runMain = async () => {
     try {
