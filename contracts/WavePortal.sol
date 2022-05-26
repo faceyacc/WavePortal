@@ -33,7 +33,7 @@ contract WavePortal {
     }
 
     function donate(uint256 amount) payable public {
-        amount = amount / 1 ether;
+        // amount = amount / 1 ether;
         require(amount > 0, "Donation cannot be zero!");
         
         paymentsOf[msg.sender] += amount;
