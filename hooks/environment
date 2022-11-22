@@ -2,5 +2,5 @@
 set -euo pipefail
 
 if [[ "$BUILDKITE_PIPELINE_SLUG" == "pipeline-one" ]]; then
-  export BUILDKITE_ANALYTICS_TOKEN="oS3AG0eBuUJMWRgkRvek"
+  export SEMGREP_APP_TOKEN="c058e597cb3884ec1c840bb1dd571f3d15a415c837d5dc8f8d0518fda869c896"
 fi
